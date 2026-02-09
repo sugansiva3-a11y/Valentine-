@@ -11,29 +11,28 @@
             font-family: sans-serif; overflow: hidden; 
         }
         
-        /* Roses falling in background */
-        .rose { position: absolute; font-size: 25px; top: -50px; animation: fall linear forwards; z-index: 1; }
+        /* Falling Roses */
+        .rose { position: absolute; font-size: 25px; top: -50px; animation: fall linear forwards; z-index: 1; pointer-events: none; }
         @keyframes fall { to { transform: translateY(110vh) rotate(360deg); } }
 
         .container { 
             text-align: center; background: white; padding: 30px; 
             border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); 
-            z-index: 10; width: 80%; max-width: 350px;
+            z-index: 10; width: 85%; max-width: 350px;
         }
         
         h1 { color: #d63384; font-size: 1.5rem; margin-bottom: 30px; }
 
-        .btn-box { position: relative; height: 100px; width: 100%; }
+        .btn-box { position: relative; height: 60px; display: flex; justify-content: center; gap: 20px; }
         
         button { padding: 12px 25px; font-size: 1rem; border: none; border-radius: 10px; cursor: pointer; font-weight: bold; }
         
-        /* NO button is static and clickable */
-        #noBtn { background-color: #ff4d6d; color: white; position: relative; z-index: 11; }
+        #noBtn { background-color: #ff4d6d; color: white; z-index: 11; }
         
-        /* YES button moves */
+        /* YES button moves but stays within window */
         #yesBtn { 
             background-color: #eee; color: #333; 
-            position: absolute; left: 10%; transition: all 0.2s ease; z-index: 12; 
+            position: absolute; transition: all 0.15s ease; z-index: 12; 
         }
 
         /* Video Screen */
@@ -42,15 +41,17 @@
             width: 100%; height: 100%; background: black; 
             z-index: 100; flex-direction: column; justify-content: center; align-items: center;
         }
-        iframe { width: 90%; height: 300px; border: none; }
-        .close-btn { margin-top: 20px; padding: 10px 20px; background: white; border-radius: 5px; }
+        .video-container { width: 90%; position: relative; padding-bottom: 56.25%; height: 0; }
+        .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+        
+        .close-btn { margin-top: 20px; padding: 12px 25px; background: #ff4d6d; color: white; border: none; border-radius: 5px; font-weight: bold; }
     </style>
 </head>
 <body>
 
     <div id="videoOverlay">
-        <div id="player"></div>
-        <button class="close-btn" onclick="closePrank()">Try Again</button>
+        <div class="video-container" id="player"></div>
+        <button class="close-btn" onclick="closePrank()">Try Again, Karthik!</button>
     </div>
 
     <div class="container">
@@ -62,7 +63,7 @@
     </div>
 
     <script>
-        // 1. Falling Roses
+        // 1. Falling Roses background
         function createRose() {
             const rose = document.createElement('div');
             rose.classList.add('rose');
@@ -74,27 +75,28 @@
         }
         setInterval(createRose, 500);
 
-        // 2. Fixed YES button movement - keeps it inside the screen
+        // 2. YES button movement (Calculated to stay on screen)
         function moveYes() {
             const btn = document.getElementById('yesBtn');
-            // Calculate a safe range so it doesn't vanish off-screen
-            const maxX = window.innerWidth - btn.offsetWidth - 20;
-            const maxY = window.innerHeight - btn.offsetHeight - 20;
+            const padding = 20;
+            // Max bounds based on screen size
+            const maxX = window.innerWidth - btn.offsetWidth - padding;
+            const maxY = window.innerHeight - btn.offsetHeight - padding;
             
-            const randomX = Math.floor(Math.random() * maxX);
-            const randomY = Math.floor(Math.random() * maxY);
+            const randomX = Math.max(padding, Math.floor(Math.random() * maxX));
+            const randomY = Math.max(padding, Math.floor(Math.random() * maxY));
             
             btn.style.position = 'fixed';
             btn.style.left = randomX + 'px';
             btn.style.top = randomY + 'px';
         }
 
-        // 3. Show Prank Video
+        // 3. Show Prank Video (Vadivelu Comedy)
         function showPrank() {
             const overlay = document.getElementById('videoOverlay');
             overlay.style.display = 'flex';
-            // Simple YouTube link for a reliable Vadivelu reaction
-            document.getElementById('player').innerHTML = '<iframe src="https://www.youtube.com/embed/S2X5S8G-mO8?autoplay=1" allow="autoplay"></iframe>';
+            // Vadivelu "Crying" Comedy Scene from YouTube
+            document.getElementById('player').innerHTML = '<iframe src="https://www.youtube.com/embed/S2X5S8G-mO8?autoplay=1&mute=0" allow="autoplay"></iframe>';
         }
 
         function closePrank() {
