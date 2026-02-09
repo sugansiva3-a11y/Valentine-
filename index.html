@@ -11,7 +11,7 @@
             font-family: sans-serif; overflow: hidden; 
         }
         
-        /* Falling Roses from your screenshot */
+        /* Falling Roses */
         .rose { position: absolute; font-size: 25px; top: -50px; animation: fall linear forwards; z-index: 1; pointer-events: none; }
         @keyframes fall { to { transform: translateY(110vh) rotate(360deg); } }
 
@@ -29,44 +29,56 @@
         
         #noBtn { background-color: #ff4d6d; color: white; z-index: 11; }
         
-        /* YES button logic to stay on screen */
         #yesBtn { 
             background-color: #eee; color: #333; 
             position: absolute; transition: all 0.15s ease; z-index: 12; 
         }
 
-        /* Black Screen for GIF */
-        #videoOverlay {
+        /* Full Screen Overlays */
+        #prankOverlay, #loveOverlay {
             display: none; position: fixed; top: 0; left: 0; 
-            width: 100%; height: 100%; background: black; 
-            z-index: 100; flex-direction: column; justify-content: center; align-items: center;
+            width: 100%; height: 100%; z-index: 100; 
+            flex-direction: column; justify-content: center; align-items: center;
+            text-align: center; padding: 20px;
         }
-        .gif-container { width: 90%; max-width: 400px; }
-        .gif-container img { width: 100%; border-radius: 10px; }
+
+        #prankOverlay { background: black; color: white; }
+        #loveOverlay { background: #ffe6ea; color: #d63384; }
+
+        .gif-container { width: 90%; max-width: 400px; margin-bottom: 20px; }
+        .gif-container img { width: 100%; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
         
-        .close-btn { margin-top: 25px; padding: 12px 25px; background: white; color: black; border-radius: 5px; font-weight: bold; border: none; }
+        .msg { font-size: 1.5rem; font-weight: bold; margin-bottom: 20px; }
+        .close-btn { padding: 12px 25px; background: white; color: black; border-radius: 5px; font-weight: bold; border: none; cursor: pointer; }
     </style>
 </head>
 <body>
 
-    <div id="videoOverlay">
+    <div id="prankOverlay">
         <div class="gif-container">
-            <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExNHJueGZ3bm92Z3R4bmR4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/3o7TKMGpxx8uYJvB9e/giphy.gif" alt="Vadivelu Comedy">
+            <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExNHJueGZ3bm92Z3R4bmR4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/3o7TKMGpxx8uYJvB9e/giphy.gif">
         </div>
-        <div style="color: white; margin-top: 15px; font-size: 1.2rem;">Ayyayo! Why you clicked NO?! 😂🙏</div>
-        <button class="close-btn" onclick="closePrank()">Try Again, Karthik!</button>
+        <div class="msg">Ayyayo! Why you clicked NO?! 😂🙏</div>
+        <button class="close-btn" onclick="closeOverlay('prankOverlay')">Try Again, Karthik!</button>
+    </div>
+
+    <div id="loveOverlay">
+        <div class="gif-container">
+            <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExOHpwaG5yZzR4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/l4pTdcifP3L27vG2k/giphy.gif">
+        </div>
+        <div class="msg">YAY! ❤️<br>You caught me! I knew you would say YES, Karthik! 🌹✨</div>
+        <button class="close-btn" style="background: #d63384; color: white;" onclick="location.reload()">Send Love Again</button>
     </div>
 
     <div class="container">
         <h1>KARTHIK, <br>WILL YOU BE MY VALENTINE?</h1>
         <div class="btn-box">
-            <button id="noBtn" onclick="showPrank()">NO</button>
-            <button id="yesBtn" onmouseover="moveYes()" ontouchstart="moveYes()">YES</button>
+            <button id="noBtn" onclick="showOverlay('prankOverlay')">NO</button>
+            <button id="yesBtn" onmouseover="moveYes()" ontouchstart="moveYes()" onclick="showOverlay('loveOverlay')">YES</button>
         </div>
     </div>
 
     <script>
-        // 1. Falling Roses Effect
         function createRose() {
             const rose = document.createElement('div');
             rose.classList.add('rose');
@@ -78,10 +90,9 @@
         }
         setInterval(createRose, 500);
 
-        // 2. Fixed YES Movement (Calculated to stay on screen)
         function moveYes() {
             const btn = document.getElementById('yesBtn');
-            const padding = 40;
+            const padding = 50;
             const maxX = window.innerWidth - btn.offsetWidth - padding;
             const maxY = window.innerHeight - btn.offsetHeight - padding;
             
@@ -93,13 +104,12 @@
             btn.style.top = randomY + 'px';
         }
 
-        // 3. Show Prank GIF
-        function showPrank() {
-            document.getElementById('videoOverlay').style.display = 'flex';
+        function showOverlay(id) {
+            document.getElementById(id).style.display = 'flex';
         }
 
-        function closePrank() {
-            document.getElementById('videoOverlay').style.display = 'none';
+        function closeOverlay(id) {
+            document.getElementById(id).style.display = 'none';
         }
     </script>
 </body>
