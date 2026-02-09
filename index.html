@@ -30,15 +30,19 @@
         #noBtn { background-color: #ff4d6d; color: white; z-index: 11; }
         #yesBtn { background-color: #f8f9fa; color: #333; position: absolute; border: 1px solid #ddd; transition: 0.1s; z-index: 12; }
 
-        /* Full Screen Video Overlay */
-        #videoOverlay {
+        /* Full Screen Overlays */
+        #videoOverlay, #successOverlay {
             display: none; position: fixed; top: 0; left: 0; 
             width: 100%; height: 100%; background: black; 
             z-index: 100; flex-direction: column; justify-content: center; align-items: center;
         }
+        #successOverlay { background: #ffe6ea; color: #d63384; z-index: 200; }
+        
         video { width: 100%; max-width: 500px; }
         .caption { color: white; margin-top: 15px; font-size: 1.2rem; text-align: center; padding: 0 10px; }
-        #closeBtn { margin-top: 20px; background: white; color: black; padding: 10px 20px; border-radius: 5px; cursor: pointer; border: none; font-weight: bold; }
+        .success-msg { font-size: 2rem; font-weight: bold; text-align: center; padding: 20px; }
+        
+        .btn-ui { margin-top: 20px; background: white; color: black; padding: 10px 20px; border-radius: 5px; cursor: pointer; border: none; font-weight: bold; }
     </style>
 </head>
 <body>
@@ -47,27 +51,30 @@
         <video id="prankVideo" playsinline>
             <source id="videoSource" src="" type="video/mp4">
         </video>
-        <div class="caption" id="videoCaption">Ayyayo! Why you clicked NO?! 😂🙏</div>
-        <button id="closeBtn" onclick="closeVideo()">Try Again</button>
+        <div class="caption">Ayyayo! Why you clicked NO?! 😂🙏</div>
+        <button class="btn-ui" onclick="closeVideo()">Try Again</button>
     </div>
 
-    <div class="container">
+    <div id="successOverlay">
+        <div class="success-msg">YAY! ❤️<br>I KNEW YOU WOULD CATCH ME! <br> See you on the 14th, Karthik! 🌹</div>
+        <button class="btn-ui" onclick="location.reload()">Back to start</button>
+    </div>
+
+    <div class="container" id="mainCard">
         <h1>KARTHIK, <br>WILL YOU BE MY VALENTINE?</h1>
         <div class="buttons">
-            <button id="yesBtn" onmouseover="moveYes()" ontouchstart="moveYes()">YES</button>
+            <button id="yesBtn" onmouseover="moveYes()" ontouchstart="moveYes()" onclick="celebrateSuccess()">YES</button>
             <button id="noBtn" onclick="playPrank()">NO</button>
         </div>
     </div>
 
     <script>
-        // Video Links Array
         const comedyVideos = [
-            "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExNHJueGZ3bm92Z3R4bmR4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9dg/3o7TKMGpxx8uYJvB9e/giphy.mp4", // Vadivelu Crying
-            "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExNmtpZHV0ZnR6ZnlxZ3R6ZnlxZ3R6ZnlxZ3R6ZnlxZ3R6ZnlxZ3R6JmVwPXYxX2ludGVybmFsX2dpZl9ieV9pZCZjdD12/26FPonu3yO1lS/giphy.mp4", // Enna Koduma Saravanan
-            "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExZ2p6ZnlxZ3R6ZnlxZ3R6ZnlxZ3R6ZnlxZ3R6ZnlxZ3R6ZnlxJmVwPXYxX2ludGVybmFsX2dpZl9ieV9pZCZjdD12/3o7TKVUn7iM8FMEU24/giphy.mp4"  // Santhanam Shocked
+            "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExNHJueGZ3bm92Z3R4bmR4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9dg/3o7TKMGpxx8uYJvB9e/giphy.mp4", 
+            "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExNmtpZHV0ZnR6ZnlxZ3R6ZnlxZ3R6ZnlxZ3R6ZnlxZ3R6ZnlxZ3R6JmVwPXYxX2ludGVybmFsX2dpZl9ieV9pZCZjdD12/26FPonu3yO1lS/giphy.mp4", 
+            "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExZ2p6ZnlxZ3R6ZnlxZ3R6ZnlxZ3R6ZnlxZ3R6ZnlxZ3R6ZnlxJmVwPXYxX2ludGVybmFsX2dpZl9ieV9pZCZjdD12/3o7TKVUn7iM8FMEU24/giphy.mp4"
         ];
 
-        // Rain of Roses and Hearts
         function createDecor() {
             const items = ['❤️', '🌹', '🌹', '🌸'];
             const decor = document.createElement('div');
@@ -80,7 +87,6 @@
         }
         setInterval(createDecor, 300);
 
-        // YES button escaping logic
         function moveYes() {
             const btn = document.getElementById('yesBtn');
             const x = Math.random() * (window.innerWidth - btn.offsetWidth - 20);
@@ -89,27 +95,27 @@
             btn.style.top = y + 'px';
         }
 
-        // Play Prank Video (Random Picker)
         function playPrank() {
             const overlay = document.getElementById('videoOverlay');
             const video = document.getElementById('prankVideo');
             const source = document.getElementById('videoSource');
-            
-            // Pick a random video from the list
-            const randomVideo = comedyVideos[Math.floor(Math.random() * comedyVideos.length)];
-            
-            source.src = randomVideo;
-            video.load(); // Reload the new video source
+            source.src = comedyVideos[Math.floor(Math.random() * comedyVideos.length)];
+            video.load();
             overlay.style.display = 'flex';
             video.play();
         }
 
         function closeVideo() {
-            const overlay = document.getElementById('videoOverlay');
-            const video = document.getElementById('prankVideo');
-            video.pause();
-            overlay.style.display = 'none';
+            document.getElementById('videoOverlay').style.display = 'none';
+            document.getElementById('prankVideo').pause();
+        }
+
+        function celebrateSuccess() {
+            document.getElementById('successOverlay').style.display = 'flex';
+            // Speed up the hearts/roses for a party feel
+            setInterval(createDecor, 100);
         }
     </script>
 </body>
 </html>
+
