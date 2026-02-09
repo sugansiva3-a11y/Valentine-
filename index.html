@@ -11,7 +11,6 @@
             font-family: sans-serif; overflow: hidden; 
         }
         
-        /* Falling Roses */
         .rose { position: absolute; font-size: 25px; top: -50px; animation: fall linear forwards; z-index: 1; pointer-events: none; }
         @keyframes fall { to { transform: translateY(110vh) rotate(360deg); } }
 
@@ -22,19 +21,12 @@
         }
         
         h1 { color: #d63384; font-size: 1.5rem; margin-bottom: 30px; }
-
         .btn-box { position: relative; height: 60px; display: flex; justify-content: center; gap: 20px; }
-        
         button { padding: 12px 25px; font-size: 1rem; border: none; border-radius: 10px; cursor: pointer; font-weight: bold; }
         
         #noBtn { background-color: #ff4d6d; color: white; z-index: 11; }
-        
-        #yesBtn { 
-            background-color: #eee; color: #333; 
-            position: absolute; transition: all 0.15s ease; z-index: 12; 
-        }
+        #yesBtn { background-color: #eee; color: #333; position: absolute; transition: all 0.15s ease; z-index: 12; }
 
-        /* Full Screen Overlays */
         #prankOverlay, #loveOverlay {
             display: none; position: fixed; top: 0; left: 0; 
             width: 100%; height: 100%; z-index: 100; 
@@ -48,7 +40,7 @@
         .gif-container { width: 90%; max-width: 400px; margin-bottom: 20px; }
         .gif-container img { width: 100%; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
         
-        .msg { font-size: 1.5rem; font-weight: bold; margin-bottom: 20px; }
+        .msg { font-size: 1.5rem; font-weight: bold; margin-bottom: 20px; padding: 0 10px; }
         .close-btn { padding: 12px 25px; background: white; color: black; border-radius: 5px; font-weight: bold; border: none; cursor: pointer; }
     </style>
 </head>
@@ -59,26 +51,28 @@
             <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExNHJueGZ3bm92Z3R4bmR4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/3o7TKMGpxx8uYJvB9e/giphy.gif">
         </div>
         <div class="msg">Ayyayo! Why you clicked NO?! 😂🙏</div>
-        <button class="close-btn" onclick="closeOverlay('prankOverlay')">Try Again, Karthik!</button>
+        <button class="close-btn" onclick="closeOverlay()">Try Again, Karthik!</button>
     </div>
 
     <div id="loveOverlay">
         <div class="gif-container">
             <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExOHpwaG5yZzR4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/l4pTdcifP3L27vG2k/giphy.gif">
         </div>
-        <div class="msg">YAY! ❤️<br>You caught me! I knew you would say YES, Karthik! 🌹✨</div>
+        <div class="msg">OKAY, OKAY! I GIVE UP! ❤️<br>You win, Karthik! <br> I knew you would say YES eventually! 🌹✨</div>
         <button class="close-btn" style="background: #d63384; color: white;" onclick="location.reload()">Send Love Again</button>
     </div>
 
-    <div class="container">
+    <div class="container" id="mainCard">
         <h1>KARTHIK, <br>WILL YOU BE MY VALENTINE?</h1>
         <div class="btn-box">
-            <button id="noBtn" onclick="showOverlay('prankOverlay')">NO</button>
-            <button id="yesBtn" onmouseover="moveYes()" ontouchstart="moveYes()" onclick="showOverlay('loveOverlay')">YES</button>
+            <button id="noBtn" onclick="handleNo()">NO</button>
+            <button id="yesBtn" onmouseover="moveYes()" ontouchstart="moveYes()" onclick="showSuccess()">YES</button>
         </div>
     </div>
 
     <script>
+        let attemptCount = 0;
+
         function createRose() {
             const rose = document.createElement('div');
             rose.classList.add('rose');
@@ -104,12 +98,24 @@
             btn.style.top = randomY + 'px';
         }
 
-        function showOverlay(id) {
-            document.getElementById(id).style.display = 'flex';
+        function handleNo() {
+            attemptCount++;
+            if (attemptCount >= 10) {
+                showSuccess();
+            } else {
+                document.getElementById('prankOverlay').style.display = 'flex';
+            }
         }
 
-        function closeOverlay(id) {
-            document.getElementById(id).style.display = 'none';
+        function closeOverlay() {
+            document.getElementById('prankOverlay').style.display = 'none';
+        }
+
+        function showSuccess() {
+            document.getElementById('prankOverlay').style.display = 'none';
+            document.getElementById('loveOverlay').style.display = 'flex';
+            // Increase roses for the celebration!
+            setInterval(createRose, 100);
         }
     </script>
 </body>
