@@ -29,28 +29,31 @@
         
         #noBtn { background-color: #ff4d6d; color: white; z-index: 11; }
         
-        /* YES button starts here */
+        /* YES button logic to stay on screen */
         #yesBtn { 
             background-color: #eee; color: #333; 
             position: absolute; transition: all 0.15s ease; z-index: 12; 
         }
 
-        /* Black Screen for Video */
+        /* Black Screen for GIF */
         #videoOverlay {
             display: none; position: fixed; top: 0; left: 0; 
             width: 100%; height: 100%; background: black; 
             z-index: 100; flex-direction: column; justify-content: center; align-items: center;
         }
-        .video-wrapper { width: 90%; max-width: 500px; aspect-ratio: 16/9; }
-        iframe { width: 100%; height: 100%; border: none; }
+        .gif-container { width: 90%; max-width: 400px; }
+        .gif-container img { width: 100%; border-radius: 10px; }
         
-        .close-btn { margin-top: 25px; padding: 12px 25px; background: white; color: black; border-radius: 5px; font-weight: bold; }
+        .close-btn { margin-top: 25px; padding: 12px 25px; background: white; color: black; border-radius: 5px; font-weight: bold; border: none; }
     </style>
 </head>
 <body>
 
     <div id="videoOverlay">
-        <div class="video-wrapper" id="player"></div>
+        <div class="gif-container">
+            <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExNHJueGZ3bm92Z3R4bmR4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/3o7TKMGpxx8uYJvB9e/giphy.gif" alt="Vadivelu Comedy">
+        </div>
+        <div style="color: white; margin-top: 15px; font-size: 1.2rem;">Ayyayo! Why you clicked NO?! 😂🙏</div>
         <button class="close-btn" onclick="closePrank()">Try Again, Karthik!</button>
     </div>
 
@@ -75,15 +78,13 @@
         }
         setInterval(createRose, 500);
 
-        // 2. Fixed YES Movement (Stays inside the screen)
+        // 2. Fixed YES Movement (Calculated to stay on screen)
         function moveYes() {
             const btn = document.getElementById('yesBtn');
-            const padding = 30;
-            // Get current screen size
+            const padding = 40;
             const maxX = window.innerWidth - btn.offsetWidth - padding;
             const maxY = window.innerHeight - btn.offsetHeight - padding;
             
-            // Generate random spot within the screen
             const randomX = Math.max(padding, Math.floor(Math.random() * maxX));
             const randomY = Math.max(padding, Math.floor(Math.random() * maxY));
             
@@ -92,17 +93,13 @@
             btn.style.top = randomY + 'px';
         }
 
-        // 3. Show Prank Video (Using a stable Vadivelu YouTube ID)
+        // 3. Show Prank GIF
         function showPrank() {
-            const overlay = document.getElementById('videoOverlay');
-            overlay.style.display = 'flex';
-            // This is a stable link for Vadivelu's "crying" comedy
-            document.getElementById('player').innerHTML = '<iframe src="https://www.youtube.com/embed/S2X5S8G-mO8?autoplay=1" allow="autoplay; encrypted-media" allowfullscreen></iframe>';
+            document.getElementById('videoOverlay').style.display = 'flex';
         }
 
         function closePrank() {
             document.getElementById('videoOverlay').style.display = 'none';
-            document.getElementById('player').innerHTML = '';
         }
     </script>
 </body>
